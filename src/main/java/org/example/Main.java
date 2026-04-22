@@ -63,6 +63,7 @@ public class Main {
         int lineasProcesadas = 0;
         int lineasValidas = 0;
         int lineasInvalidas = 0;
+        boolean procesoExitoso= true ;
 
         ///  PASO 4: try-with-resources para manejar la apertura y cierre automático de archivos
         /// Esta es la forma CORRECTA y MODERNA de trabajar con archivos en Java.
@@ -144,15 +145,53 @@ public class Main {
 
                     lineasProcesadas++;
 
+
                     /// ----- VALIDACIÓN DE CADA LÍNEA -----
+
                     Resultado resultado = validarYProcesarLinea(
                             linea, numeroLinea, escritorValidos, escritorErrores
                     );
 
 
+                    //Acumulamos resultados
+                    // si es true entra en el if,
+
+                    if(resultado.esValida) {
+                        lineasValidas++;
+                        //Acumulamos los kilos de los envíos válidos para el resumen final
+                        totalKilos += resultado.kilos;
+                    } else {
+                        lineasInvalidas++;
+                    }
+
+                    }
 
 
-                }
+                procesoExitoso= true;
+
+                // Cerramos la sesión en el log de errores
+
+
+                escritorErrores.println("=================================================");
+                escritorErrores.println("--- Procesamiento finalizado: " + LocalDateTime.now().format(formato) + " ---");
+                escritorErrores.println("Total líneas procesadas: " + lineasProcesadas);
+                escritorErrores.println("Líneas válidas: " + lineasValidas);
+                escritorErrores.println("Líneas inválidas: " + lineasInvalidas);
+                escritorErrores.println("Total kilos procesados: " + totalKilos);
+                escritorErrores.println("=================================================");
+
+
+                /// Mensaje en consola con el resultado
+                System.out.println("=== Resumen del procesamiento ===");
+                System.out.println("Total líneas procesadas: " + lineasProcesadas);
+                System.out.println("Líneas válidas: " + lineasValidas);
+                System.out.println("Líneas inválidas: " + lineasInvalidas);
+                System.out.println("Total kilos procesados: " + totalKilos);
+
+
+
+
+
             } catch (Exception e) {
                 escritorErrores.println("ERROR FATAL: Ocurrió un error inesperado durante el procesamiento.");
                 escritorErrores.println("Detalles del error: " + "Línea de error " + numeroLinea + e.getMessage());
@@ -180,15 +219,11 @@ public class Main {
                 System.err.println("ADVERTENCIA: No se pudo crear la carpeta ' datos' ");
             }
 
-            /// HOLAAAAAAAAAAAAAAAAAAAA
 
-            /*  adeuuuuuuuuuuuuuuuuuu
-
-
-             */
         }
     }
 
+            ///  Resultado es una funcion
 
     private static Resultado validarYProcesarLinea(String linea, int numerodelinea, PrintWriter escritorValidos, PrintWriter escritorerrores) {
 
@@ -235,8 +270,6 @@ public class Main {
 
 
                  /// VALIDACIÓN 3: CAMPO KILOS TIENE QUE SER VÁLIDO
-
-
 
             /*
             1. kILOSsTR
@@ -324,10 +357,3 @@ public class Main {
 
 
 
-
-
-
-///Bucle principal de LEXCTURA
-// readline () devuelve null cuando se llega al final del archivo, por eso usamos
-//
-// El patron (lineabr
